@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4e3343c7-b5de-428f-9565-99ef94357c9a">
+	<property name="template.type" value="columnar"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#000000" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="Cod_Recluso" class="java.lang.String"/>
+	<parameter name="fecha1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT nombre_recluso AS nombre_recluso, apellido_recluso AS Apellidos, apellido_recluso, crimen AS Crimen, descripcion AS Descripcion, convert(varchar,fecha, 103) AS Fecha, codigo_barra, alias, nombre_sector, nombre_agrupacion, celda, estado
+
+FROM
+Historial_recluso AS HR,
+Reclusos AS R,
+Crimen AS C,
+Sector AS S,
+Agrupacion AS A,
+Estado AS E
+
+
+WHERE
+HR.cod_recluso = R.cod_recluso AND
+HR.cod_crimen = C.cod_crimen AND
+S.cod_sector = R.cod_sector AND
+A.cod_agrupacion = S.cod_agrupacion AND
+E.cod_estado = R.cod_estado AND
+HR.cod_recluso = $P{Cod_Recluso} AND
+HR.fecha between $P{fecha1} AND $P{fecha2}]]>
+	</queryString>
+	<field name="nombre_recluso" class="java.lang.String"/>
+	<field name="Apellidos" class="java.lang.String"/>
+	<field name="apellido_recluso" class="java.lang.String"/>
+	<field name="Crimen" class="java.lang.String"/>
+	<field name="Descripcion" class="java.lang.String"/>
+	<field name="Fecha" class="java.lang.String"/>
+	<field name="codigo_barra" class="java.lang.Integer"/>
+	<field name="alias" class="java.lang.String"/>
+	<field name="nombre_sector" class="java.lang.String"/>
+	<field name="nombre_agrupacion" class="java.lang.String"/>
+	<field name="celda" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.String"/>
+	<group name="Apellidos">
+		<groupExpression><![CDATA[$F{Apellidos}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" mode="Opaque" x="0" y="0" width="555" height="62" forecolor="#00CC99" backcolor="#333333" uuid="90b9cfc2-25e6-45fb-bc78-81c5bff85947"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Agency FB" size="36" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Historial del recluso]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="143">
+			<staticText>
+				<reportElement mode="Opaque" x="304" y="97" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="1bcc1e12-008b-4391-8538-b838d6c5a98c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Celda:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="304" y="21" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="4d452789-02fc-4835-a008-9e3cc2a0770d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sector:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="24" y="97" width="129" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="ff5ac357-e42b-462d-b89c-53e98117388b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alias:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="24" y="21" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="e9e6d554-04fd-4f08-8484-423f1997e8c6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="24" y="46" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="e2408ec6-4a00-49d0-a424-b0c1c8e966e1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Recluso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="304" y="72" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="8c72838f-15dd-48ec-b15c-6aacf04941b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="304" y="46" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="b11338fb-0bd7-49e8-a49a-6841bbc2dcc2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agrupación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="24" y="71" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="35bf1feb-3296-4307-ba9b-c8ab873ff800"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellido Recluso:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="165" y="46" width="117" height="20" uuid="98d6cef8-2cac-4c2a-8035-0a4925e92fd2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_recluso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="71" width="117" height="20" uuid="a32ecc1e-256d-4efd-9986-cd6705c253b3"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellido_recluso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="97" width="117" height="20" uuid="55f2fb8f-3893-4462-952c-d33892ca166a"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{alias}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="21" width="117" height="20" uuid="b935c9c4-d33a-4421-bb05-5561b477625e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_barra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="21" width="104" height="20" uuid="2403b483-3622-450f-95f8-1306bd8f77a8"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_sector}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="46" width="104" height="20" uuid="79578788-9af1-4d04-899a-ffcc4011cd5c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_agrupacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="71" width="104" height="20" uuid="e9edc83a-211a-42af-b960-97196dafd132"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="97" width="104" height="20" uuid="54d74e7b-0d91-4977-9ee8-8770143acb34"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="35">
+			<staticText>
+				<reportElement mode="Opaque" x="25" y="8" width="140" height="20" forecolor="#000000" backcolor="#00CCCC" uuid="85b3e77b-dc18-4cf3-b64b-ae6441d6da25"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Crimen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="172" y="8" width="246" height="20" forecolor="#000000" backcolor="#00CCCC" uuid="eabf27a4-06f7-459c-9cf2-fb749f2455ac"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="424" y="8" width="87" height="20" forecolor="#000000" backcolor="#00CCCC" uuid="75734f28-93d4-406e-9fd2-451f05845118"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30">
+			<textField>
+				<reportElement x="20" y="5" width="145" height="20" uuid="4358098a-c557-48d5-b82e-19e0677154f7"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Crimen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="178" y="6" width="240" height="20" uuid="3c7dd590-1b51-4525-a18a-355419841ac4"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="6" width="69" height="20" uuid="647fba95-05b0-404d-8b36-ebcd6fe0566c"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="227" y="9" width="55" height="20" uuid="3a7a67d7-8d50-43e6-ab6d-d3deea546319"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="9" width="15" height="20" uuid="e281a70e-ae2f-45af-a878-f1d71fd292f6"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="274" y="9" width="19" height="20" uuid="16bd518c-d934-4bb1-bf51-b22946923f6b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="313" y="9" width="20" height="20" uuid="89eb0376-7c94-469c-b6e0-9265c35f794a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

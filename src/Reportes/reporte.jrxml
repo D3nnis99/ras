@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="11afde36-3304-422f-a4f6-c9aee1444478">
+	<property name="template.type" value="columnar"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#000000" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[select cod_recluso, nombre_recluso, apellido_recluso, edad_recluso, estado, nombre_sector, tez, altura, peso, alias, codigo_barra from ((Reclusos as r inner join Estado as e on r.cod_estado = e.cod_estado) inner join Sector as s on r.cod_sector = s.cod_sector inner join Tez as t on r.cod_tez = t.cod_tez)]]>
+	</queryString>
+	<field name="cod_recluso" class="java.lang.Integer"/>
+	<field name="nombre_recluso" class="java.lang.String"/>
+	<field name="apellido_recluso" class="java.lang.String"/>
+	<field name="edad_recluso" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="nombre_sector" class="java.lang.String"/>
+	<field name="tez" class="java.lang.String"/>
+	<field name="altura" class="java.math.BigDecimal"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="alias" class="java.lang.String"/>
+	<field name="codigo_barra" class="java.lang.Integer"/>
+	<group name="apellido_recluso">
+		<groupExpression><![CDATA[$F{apellido_recluso}]]></groupExpression>
+		<groupHeader>
+			<band height="32">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#000000" backcolor="#00A79D" uuid="d9e03442-1330-4062-8422-3089b8d489c8"/>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement style="SubTitle" isPrintRepeatedValues="false" x="159" y="1" width="322" height="23" forecolor="#FFFFFF" uuid="a49c7eca-d357-43cf-b2c0-fa92ffaa9f70"/>
+						<textElement>
+							<font isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{apellido_recluso}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement positionType="Float" x="461" y="1" width="80" height="20" forecolor="#000000" uuid="ddb809b2-4f33-4725-99f6-97c473ee7d38"/>
+						<textElement textAlignment="Right">
+							<font fontName="Times New Roman" size="16" isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_recluso}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement style="Column header" positionType="Float" x="4" y="4" width="142" height="20" forecolor="#000000" uuid="8ed49699-e016-4025-9315-27a8933ff287"/>
+						<textElement textAlignment="Right">
+							<font isBold="false"/>
+						</textElement>
+						<text><![CDATA[Apellido del Recluso]]></text>
+					</staticText>
+					<staticText>
+						<reportElement style="Column header" positionType="Float" x="336" y="4" width="142" height="20" forecolor="#000000" uuid="edf5ef34-19d5-4823-95cf-08ef01f5e7e8"/>
+						<textElement textAlignment="Right">
+							<font isBold="false"/>
+						</textElement>
+						<text><![CDATA[Codigo del Recluso]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="cod_recluso">
+		<groupExpression><![CDATA[$F{cod_recluso}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<group name="codigo_barra">
+		<groupExpression><![CDATA[$F{codigo_barra}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<image>
+				<reportElement x="2" y="0" width="118" height="132" uuid="fc546b42-5150-45af-97aa-aba8579ccf90"/>
+				<imageExpression><![CDATA["reclusos_report.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="140" y="10" width="411" height="93" uuid="494a1f7e-f1d1-4d61-bf83-416e2bf4ed47"/>
+				<textElement>
+					<font size="80" isBold="false"/>
+				</textElement>
+				<text><![CDATA[RECLUSOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="318" y="103" width="197" height="29" uuid="f8284a29-4d09-4437-87af-c95788670780"/>
+				<textElement>
+					<font size="22" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Numero de Reclusos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="515" y="103" width="36" height="29" uuid="aecefb81-d9b0-4c3a-a8ac-5a77c70be7a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Reclusos_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="178" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="170" width="551" height="1" uuid="cf0f7a8b-b9fc-45f8-9cfa-f5200d7e2b24"/>
+			</line>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="0" width="142" height="20" forecolor="#000000" uuid="f9002221-915f-4bab-b518-d60c36a8f626"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nombre del Recluso: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="0" width="394" height="18" uuid="6c045f80-1cb8-4979-b186-d472b685ea91"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_recluso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="20" width="142" height="20" forecolor="#000000" uuid="a2a92301-e296-4c38-a48d-8b2161d6152e"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Edad del Recluso: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="20" width="394" height="18" uuid="5ccb6cf7-73f3-4d06-b1db-3059e72f6016"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edad_recluso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="40" width="142" height="20" forecolor="#000000" uuid="c97ee370-da4c-4e28-a7b8-0ef3838edaaf"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Estado: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="40" width="394" height="18" uuid="694da756-f7f0-4a58-975d-3f7a46a5eb32"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="60" width="142" height="20" forecolor="#000000" uuid="f442492e-140b-4ecf-8a65-240080238890"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nombre del Sector: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="60" width="394" height="18" uuid="49acbc17-a23c-49c9-996d-17b3d02aa904"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_sector}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="80" width="142" height="20" forecolor="#000000" uuid="0260e509-8fca-49bc-9124-0523f1548e56"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tez: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="80" width="392" height="18" uuid="c29a21e2-c837-4981-a88a-c5306cc3d0ec"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tez}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="100" width="142" height="20" forecolor="#000000" uuid="f0fd045c-2cd6-46e1-af96-c87c71e06371"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Altura: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="100" width="394" height="18" uuid="476fde29-75d6-4f0a-9dd4-07f3572fc400"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{altura}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="120" width="142" height="20" forecolor="#000000" uuid="0d98e627-4ff2-48dc-889a-3fd1eebc5cb0"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Peso: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="120" width="394" height="18" uuid="aa3d8eee-2b1a-47f8-b2f4-6ff8ddb03093"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="4" y="140" width="142" height="20" forecolor="#000000" uuid="e817a54e-7be0-4c01-82f2-9d3d17912c2f"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Alias: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="159" y="140" width="262" height="18" uuid="e762664e-3d37-4160-bdb9-699a2bd3dc97"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{alias}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="421" y="138" width="130" height="20" uuid="b89b7e76-e401-4f87-a627-ec2d6097108b"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39 (Extended)" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$V{codigo_barra_COUNT}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="b8f3109c-a514-4dc0-b89a-e7359ccd6fe6"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="13" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="2" y="0" width="555" height="13" forecolor="#000000" backcolor="#00A79D" uuid="f354323e-d43d-4281-99b8-b3ee6e543e80"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="511" y="0" width="40" height="13" forecolor="#FFFFFF" uuid="3e846579-dd9f-4ead-b618-e471c9629d45"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="13" forecolor="#FFFFFF" uuid="2378c7dd-2e3e-4399-9aab-92aebe4e0ad5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="26055ab7-3977-4600-911b-e040a1006eef"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

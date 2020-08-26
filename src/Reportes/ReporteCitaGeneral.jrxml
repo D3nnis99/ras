@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f1a8bd47-5105-4ad8-bc75-444870fd6508">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_inicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT nombre_visita, apellido_visita, nombre_recluso, apellido_recluso, vinculo, convert(varchar,fecha_cita, 103) AS fecha_cita, convert(varchar,hora_cita, 114) AS hora_cita, asistencia  FROM Citas,Visitas,Reclusos,Asistencia WHERE (Citas.cod_recluso=Reclusos.cod_recluso and Citas.cod_visita=Visitas.cod_visita ) and asistencia.cod_asistencia = Citas.cod_asistencia and fecha_cita between $P{fecha_inicio} and $P{fecha_fin} order by fecha_cita]]>
+	</queryString>
+	<field name="nombre_visita" class="java.lang.String"/>
+	<field name="apellido_visita" class="java.lang.String"/>
+	<field name="nombre_recluso" class="java.lang.String"/>
+	<field name="apellido_recluso" class="java.lang.String"/>
+	<field name="vinculo" class="java.lang.String"/>
+	<field name="fecha_cita" class="java.lang.String"/>
+	<field name="hora_cita" class="java.lang.String"/>
+	<field name="asistencia" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="72" forecolor="#00CC99" backcolor="#333333" uuid="604b0e81-6520-4b06-a1cd-ef0e30ebc68c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Agency FB" size="36" isBold="false"/>
+				</textElement>
+				<text><![CDATA[REPORTES GENERAL DE CITAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="35" y="40" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="c725d093-9ced-452a-8186-6f08a250f0a5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos tomados de:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="174" y="40" width="272" height="20" uuid="d5f158c2-7867-4e5e-9023-bf201d2fa57e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha_inicio} + "    hasta    " + $P{fecha_fin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="35" y="14" width="130" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="3dceea0b-6ce2-4b61-9fde-3944d5500cd2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha generación:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="174" y="15" width="186" height="20" uuid="d33eb06c-d814-486f-84d8-be25a0a11e8e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="26" y="8" width="146" height="20" backcolor="#00CCCC" uuid="2343837c-1f88-4539-a359-24b900b0a2c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Nombre visita]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="179" y="8" width="144" height="20" backcolor="#00CCCC" uuid="e51d53c2-0f79-4d82-b631-de91c792d88b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Nombre recluso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="331" y="8" width="70" height="20" backcolor="#00CCCC" uuid="220b1f1d-2c1e-4670-88b9-a35c9c76fb04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Fecha ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="408" y="8" width="42" height="20" backcolor="#00CCCC" uuid="ae464a5a-ccbd-4c0c-8a0a-bb007e41a25b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Hora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="457" y="8" width="77" height="20" backcolor="#00CCCC" uuid="c0a658a8-5f2c-4494-83e9-6e6fa1695de2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Asistencia]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="26" y="6" width="146" height="20" uuid="26701f71-07d8-4119-8614-fae0a401444f"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_visita} + " " + $F{apellido_visita}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="6" width="144" height="20" uuid="b0b02cf6-a6d5-4717-be9a-5b084d31359a"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_recluso} + " " + $F{apellido_recluso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="6" width="70" height="20" uuid="fa588495-d5a1-432e-b70b-d505b7a378d1"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_cita}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="6" width="34" height="20" uuid="dccfc71e-9282-43f5-a5fd-0a58608a322b"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hora_cita}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="6" width="77" height="20" uuid="4f49cb29-e365-4d02-b56e-e38d34c4df8b"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asistencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="308" y="17" width="20" height="20" uuid="5d3ed5ac-acc8-4b59-926c-96c83a169274"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="290" y="17" width="15" height="20" uuid="86ae424c-36b9-4934-8bfc-69dd0cdc2e3d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="17" width="55" height="20" uuid="a8bd7c4c-45f2-4cef-b0ac-cc464f85089f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="271" y="17" width="19" height="20" uuid="ecb8f545-0715-4e56-abcf-e7be7eb39d4c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

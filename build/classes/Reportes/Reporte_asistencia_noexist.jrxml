@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Cod_reclu" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select cod_recluso,codigo_barra,nombre_recluso,nombre_sector,apellido_recluso,alias, estado FROM Reclusos, Tez, Estado, Sector, Horario,Asistencia Where Asistencia.cod_asistencia =Reclusos.cod_asistencia AND  Tez.cod_tez= Reclusos.cod_tez AND Estado.cod_estado = Reclusos.cod_estado AND Sector.cod_sector = Reclusos.cod_sector  AND  Horario.cod_horario = Sector.cod_horario AND Estado.cod_estado =1 AND  Asistencia.cod_asistencia =2 ]]>
+	</queryString>
+	<field name="cod_recluso" class="java.lang.Integer"/>
+	<field name="codigo_barra" class="java.lang.Integer"/>
+	<field name="nombre_recluso" class="java.lang.String"/>
+	<field name="nombre_sector" class="java.lang.String"/>
+	<field name="apellido_recluso" class="java.lang.String"/>
+	<field name="alias" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="10" width="555" height="58" forecolor="#00CC99" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="Agency FB" size="36" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Reclusos  Escapados]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="123" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="497" y="0" width="58" height="20"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Fecha de Creacion =]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="0" width="105" height="20"/>
+				<textElement/>
+				<text><![CDATA[Numero de paginas =]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[codigo_barra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="147" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[nombre_recluso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[apellido_recluso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[alias]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="31" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codigo_barra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombre_recluso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="271" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{apellido_recluso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="397" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{alias}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

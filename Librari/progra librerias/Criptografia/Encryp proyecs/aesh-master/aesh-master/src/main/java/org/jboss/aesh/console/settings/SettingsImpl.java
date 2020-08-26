@@ -1,0 +1,654 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2014 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @authors tag. All rights reserved.
+ * See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.jboss.aesh.console.settings;
+
+import org.jboss.aesh.console.AeshContext;
+import org.jboss.aesh.console.Config;
+import org.jboss.aesh.console.helper.InterruptHook;
+import org.jboss.aesh.io.FileResource;
+import org.jboss.aesh.io.Resource;
+import org.jboss.aesh.readline.editing.EditMode;
+import org.jboss.aesh.readline.editing.EditModeBuilder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintStream;
+
+/**
+ * Settings object that is parsed when Console is initialized.
+ *
+ * @author <a href="mailto:stale.pedersen@jboss.org">Ståle W. Pedersen</a>
+ */
+public class SettingsImpl implements Settings {
+
+    private String name;
+    private EditMode.Mode editMode = EditMode.Mode.EMACS;
+    private File historyFile;
+    private FileAccessPermission historyFilePermission;
+    private int historySize = 500;
+    private boolean historyDisabled = false;
+    private boolean historyPersistent = true;
+    private String bellStyle;
+    private boolean ansiConsole = true;
+    private InputStream inputStream;
+    private PrintStream stdOut;
+    private PrintStream stdErr;
+    private boolean readInputrc = true;
+    private File inputrc;
+    private boolean isLogging = false;
+    private String logFile;
+    private boolean disableCompletion = false;
+    private QuitHandler quitHandler;
+    private File aliasFile;
+    private boolean aliasEnabled = true;
+    private boolean persistAlias = true;
+    private InterruptHook interruptHook = null;
+    private boolean enableOperatorParser = true;
+    private boolean manEnabled = true;
+    private AeshContext aeshContext;
+    private boolean exportEnabled = true;
+    private File exportFile;
+    private boolean persistExport = true;
+    private boolean exportUsesSystemEnvironment = false;
+    private Resource resource;
+    private String execute;
+    private Resource executeFileAtStart;
+
+    protected SettingsImpl() {
+    }
+
+    protected SettingsImpl(Settings baseSettings) {
+        setName(baseSettings.getName());
+        setMode(baseSettings.getMode());
+        setHistoryFile(baseSettings.getHistoryFile());
+        setHistoryFilePermission(baseSettings.getHistoryFilePermission());
+        setHistorySize(baseSettings.getHistorySize());
+        setBellStyle(baseSettings.getBellStyle());
+        setAnsiConsole(baseSettings.isAnsiConsole());
+        setInputStream(baseSettings.getInputStream());
+        setStdOut(baseSettings.getStdOut());
+        setStdErr(baseSettings.getStdErr());
+        setInputrc(baseSettings.getInputrc());
+        setLogging(baseSettings.isLogging());
+        setDisableCompletion(baseSettings.isCompletionDisabled());
+        setLogFile(baseSettings.getLogFile());
+        setReadInputrc(baseSettings.doReadInputrc());
+        setHistoryDisabled(baseSettings.isHistoryDisabled());
+        setHistoryPersistent(baseSettings.isHistoryPersistent());
+        setAliasFile(baseSettings.getAliasFile());
+        setAliasEnabled(baseSettings.isAliasEnabled());
+        setPersistAlias(baseSettings.doPersistAlias());
+        setQuitHandler(baseSettings.getQuitHandler());
+        setInterruptHook(baseSettings.getInterruptHook());
+        enableOperatorParser(baseSettings.isOperatorParserEnabled());
+        setManEnabled(baseSettings.isManEnabled());
+        setAeshContext(baseSettings.getAeshContext());
+        setExportEnabled(baseSettings.isExportEnabled());
+        setExportFile(baseSettings.getExportFile());
+        setPersistExport(baseSettings.doPersistExport());
+        setResource(baseSettings.getResource());
+        setExportUsesSystemEnvironment(baseSettings.doExportUsesSystemEnvironment());
+        setExecuteAtStart(baseSettings.getExecuteAtStart());
+    }
+
+    public void resetToDefaults() {
+        setName("aesh");
+        editMode = EditMode.Mode.EMACS;
+        historyFile = null;
+        historyFilePermission = null;
+        historySize = 500;
+        historyDisabled = false;
+        historyPersistent = true;
+        bellStyle = null;
+        ansiConsole = true;
+        inputStream = null;
+        setStdOut(null);
+        setStdErr(null);
+        readInputrc = true;
+        isLogging = false;
+        logFile = null;
+        disableCompletion = false;
+        setQuitHandler(null);
+        setAliasEnabled(true);
+    }
+
+    /**
+     * Set the name of the cli
+     *
+     * @param name name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Get the name of the cli
+     *
+     * @return default is aesh
+     */
+    @Override
+    public String getName() {
+        if(name == null)
+            name = "aesh";
+        return name;
+    }
+
+    /**
+     * Either Emacs or Vi mode.
+     * Emacs is default if not set
+     *
+     * @return editing mode
+     */
+    @Override
+    public EditMode.Mode getMode() {
+        return editMode;
+    }
+
+    public void setMode(EditMode.Mode editMode) {
+        this.editMode = editMode;
+    }
+
+    /**
+     * Get EditMode based on os and mode
+     *
+     * @return edit mode
+     */
+    @Override
+    public EditMode getEditMode() {
+        if(readInputrc) {
+            try {
+                return new EditModeBuilder().parseInputrc(new FileInputStream(getInputrc())).create();
+            }
+            catch(FileNotFoundException e) {
+                return new EditModeBuilder(getMode()).create();
+            }
+        }
+        else
+            return new EditModeBuilder(getMode()).create();
+    }
+
+    /**
+     * @return the historyFilePermission
+     */
+    public FileAccessPermission getHistoryFilePermission() {
+        return historyFilePermission;
+    }
+
+    /**
+     * @param historyFilePermission the historyFilePermission to set
+     */
+    public void setHistoryFilePermission(FileAccessPermission historyFilePermission) {
+        this.historyFilePermission = historyFilePermission;
+    }
+
+    /**
+     * If not set the history file will be:
+     * $HOME/.aesh_history
+     *
+     * @return history file
+     */
+    @Override
+    public File getHistoryFile() {
+        if(historyFile == null) {
+            return new File(System.getProperty("user.home")+
+                    Config.getPathSeparator()+".aesh_history");
+        }
+        else
+            return historyFile;
+    }
+
+    public void setHistoryFile(File historyFile) {
+        this.historyFile = historyFile;
+    }
+
+    /**
+     * By default history size is 500
+     * If its set to -1 the size is unlimited (Integer.MAX_VALUE)
+     *
+     * @return size
+     */
+    @Override
+    public int getHistorySize() {
+        return historySize;
+    }
+
+    /**
+     * By default history size is 500
+     * If its set to -1 the size is unlimited (Integer.MAX_VALUE)
+     *
+     * @param historySize size
+     */
+    public void setHistorySize(int historySize) {
+        this.historySize = historySize;
+    }
+
+    /**
+     * By default, bell style is noisy
+     * NOTE: Not implemented yet
+     *
+     * @return bell style
+     */
+    @Override
+    public String getBellStyle() {
+        return bellStyle;
+    }
+
+    public void setBellStyle(String bellStyle) {
+        this.bellStyle = bellStyle;
+    }
+
+    /**
+     * @return true if its an ansi console
+     */
+    @Override
+    public boolean isAnsiConsole() {
+        return ansiConsole;
+    }
+
+    /**
+     * Possible to override the type of console
+     *
+     * @param ansiConsole is it an ansi compatible console?
+     */
+    public void setAnsiConsole(boolean ansiConsole) {
+        this.ansiConsole = ansiConsole;
+    }
+
+    /**
+     * If not set, System.in will be used
+     *
+     * @return input
+     */
+    @Override
+    public InputStream getInputStream() {
+        if(inputStream == null) {
+            inputStream = System.in;
+        }
+        return inputStream;
+    }
+
+    /**
+     * Set where input is coming from
+     *
+     * @param inputStream input
+     */
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    /**
+     * If not set System.out is used
+     * @return out
+     */
+    @Override
+    public PrintStream getStdOut() {
+        if(stdOut == null)
+            return System.out;
+        else
+            return stdOut;
+    }
+
+    /**
+     * Set where output should go to
+     * @param stdOut output
+     */
+    public void setStdOut(PrintStream stdOut) {
+        this.stdOut = stdOut;
+    }
+
+     /**
+     * If not set System.out is used
+     * @return out
+     */
+    @Override
+    public PrintStream getStdErr() {
+        if(stdErr == null)
+            return System.err;
+        else
+            return stdErr;
+    }
+
+    /**
+     * Set where output should go to
+     * @param stdErr output
+     */
+    public void setStdErr(PrintStream stdErr) {
+        this.stdErr = stdErr;
+    }
+
+    /**
+     * Get the inputrc file, if not set it defaults to:
+     * System.getProperty("user.home")+Config.getPathSeparator()+".inputrc"
+     *
+     * @return inputrc
+     */
+    @Override
+    public File getInputrc() {
+        if(inputrc == null) {
+            inputrc = new File(System.getProperty("user.home")+Config.getPathSeparator()+".inputrc");
+        }
+        return inputrc;
+    }
+
+    public void setInputrc(File inputrc) {
+        this.inputrc = inputrc;
+    }
+
+    /**
+     * Are we logging?
+     *
+     * @return logging
+     */
+    @Override
+    public boolean isLogging() {
+        return isLogging;
+    }
+
+    /**
+     * Set logging, by default set to true
+     *
+     * @param logging do log
+     */
+    public void setLogging(boolean logging) {
+        isLogging = logging;
+    }
+
+    /**
+     * Is completion disabled?
+     * Set to false by default
+     *
+     * @return dis completion
+     */
+    @Override
+    public boolean isCompletionDisabled() {
+        return disableCompletion;
+    }
+
+    /**
+     * Set to true do disable completion
+     * Set to false by default
+     *
+     * @param disableCompletion dis
+     */
+    public void setDisableCompletion(boolean disableCompletion) {
+        this.disableCompletion = disableCompletion;
+    }
+
+    /**
+     * Get log file
+     *
+     * @return log file
+     */
+    @Override
+    public String getLogFile() {
+        if(logFile == null) {
+            logFile = Config.getTmpDir()+Config.getPathSeparator()+"aesh.log";
+        }
+        return logFile;
+    }
+
+    /**
+     * Specify a log file
+     *
+     * @param logFile file
+     */
+    public void setLogFile(String logFile) {
+        this.logFile = logFile;
+    }
+
+    /**
+     * Should we read config from inputrc
+     * Set to true by default
+     *
+     * @return do we?
+     */
+    @Override
+    public boolean doReadInputrc() {
+        return readInputrc;
+    }
+
+    /**
+     * Specify if we should read config from inputrc
+     * Set to true by default
+     *
+     * @param readInputrc specify
+     */
+    public void setReadInputrc(boolean readInputrc) {
+        this.readInputrc = readInputrc;
+    }
+
+    /**
+     * Is history disabled
+     * Set to true to disable history
+     *
+     * @return historyDisabled
+     */
+    @Override
+    public boolean isHistoryDisabled() {
+        return historyDisabled;
+    }
+
+    /**
+     * Is history disabled
+     * Set to true to disable history
+     *
+     * @param historyDisabled history
+     */
+    public void setHistoryDisabled(boolean historyDisabled) {
+        this.historyDisabled = historyDisabled;
+    }
+
+    /**
+     * Is the history list persisted to file.
+     * Set to true by default
+     *
+     * @return is history persistent
+     */
+    @Override
+    public boolean isHistoryPersistent() {
+        return historyPersistent;
+    }
+
+    /**
+     * Is the history list persisted to file.
+     * Set to true by default
+     *
+     * @param historyPersistent history
+     */
+    public void setHistoryPersistent(boolean historyPersistent) {
+        this.historyPersistent = historyPersistent;
+    }
+
+    public void setAliasFile(File file) {
+        this.aliasFile = file;
+    }
+
+    @Override
+    public File getAliasFile() {
+        if(aliasFile == null)
+            aliasFile = new File(Config.getHomeDir()+Config.getPathSeparator()+".aesh_aliases");
+
+        return aliasFile;
+    }
+
+    @Override
+    public boolean isAliasEnabled() {
+        return aliasEnabled;
+    }
+
+    public void setAliasEnabled(boolean enabled) {
+        aliasEnabled = enabled;
+    }
+
+    public void setPersistAlias(boolean persist) {
+        persistAlias = persist;
+    }
+
+    @Override
+    public boolean doPersistAlias() {
+        return persistAlias;
+    }
+
+    public void setQuitHandler(QuitHandler qh) {
+        quitHandler = qh;
+    }
+
+    @Override
+    public QuitHandler getQuitHandler() {
+        return quitHandler;
+    }
+
+    public void setInterruptHook(InterruptHook hook) {
+        interruptHook = hook;
+    }
+
+    @Override
+    public boolean hasInterruptHook() {
+        return interruptHook != null;
+    }
+
+    @Override
+    public InterruptHook getInterruptHook() {
+        return interruptHook;
+    }
+
+    public void enableOperatorParser(boolean enable) {
+        enableOperatorParser = enable;
+    }
+
+    @Override
+    public boolean isOperatorParserEnabled() {
+        return enableOperatorParser;
+    }
+
+    @Override
+    public void switchMode() {
+       if(editMode == EditMode.Mode.VI)
+           editMode = EditMode.Mode.EMACS;
+        else
+           editMode = EditMode.Mode.VI;
+    }
+
+    @Override
+    public boolean isManEnabled() {
+        return manEnabled;
+    }
+
+    public void setManEnabled(boolean enabled) {
+        this.manEnabled = enabled;
+    }
+
+    @Override
+    public AeshContext getAeshContext() {
+        if(aeshContext == null)
+            aeshContext = new DefaultAeshContext(getResource().newInstance(Config.getUserDir()));
+        return aeshContext;
+    }
+
+    public void setAeshContext(AeshContext aeshContext) {
+        this.aeshContext = aeshContext;
+    }
+
+    @Override
+    public File getExportFile() {
+        if(exportFile == null)
+            exportFile = new File(Config.getHomeDir()+Config.getPathSeparator()+".aesh_export");
+        return exportFile;
+    }
+
+    public void setExportFile(File exportFile) {
+        if(exportFile != null)
+            this.exportFile = exportFile;
+    }
+
+    @Override
+    public boolean isExportEnabled() {
+        return exportEnabled;
+    }
+
+    public void setExportEnabled(boolean exportEnabled) {
+        this.exportEnabled = exportEnabled;
+    }
+
+    @Override
+    public void setPersistExport(boolean persistExport) {
+        this.persistExport = persistExport;
+    }
+
+    @Override
+    public boolean doPersistExport() {
+        return persistExport;
+    }
+
+    @Override
+    public void setExportUsesSystemEnvironment(boolean isLoad) {
+        this.exportUsesSystemEnvironment = isLoad;
+    }
+
+    @Override
+    public boolean doExportUsesSystemEnvironment() {
+        return this.exportUsesSystemEnvironment;
+    }
+
+    @Override
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    @Override
+    public void setExecuteAtStart(String execute) {
+        if(execute.endsWith(Config.getLineSeparator()))
+            this.execute = execute;
+        else
+            this.execute = execute + Config.getLineSeparator();
+    }
+
+    @Override
+    public String getExecuteAtStart() {
+        return execute;
+    }
+
+    @Override
+    public void setExecuteFileAtStart(Resource executeFileAtStart) {
+        this.executeFileAtStart = executeFileAtStart;
+    }
+
+    @Override
+    public Resource getExecuteFileAtStart() {
+        return executeFileAtStart;
+    }
+
+    @Override
+    public Resource getResource() {
+        if(resource == null)
+            resource = new FileResource("");
+        return resource;
+    }
+
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
